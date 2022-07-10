@@ -1,0 +1,11 @@
+{
+  "domain": "gamma_light",
+  "integration_type": "helper",
+  "name": "Gamma Adjusted Light",
+  "documentation": "https://github.com/MarkGodwin/hacs_gamma_light",
+  "codeowners": ["@markgodwin"],
+  "quality_scale": "silver",
+  "iot_class": "calculated",
+  "config_flow": true,
+  "version": "1.0.0"
+}

@@ -1,0 +1,35 @@
+{
+    "title": "Adjust the dimming behavior of a light",
+    "config": {
+        "step": {
+            "user": {
+                "description": "Pick a light that you want to adjust. A wrapper will be created, and the original light will be hidden.",
+                "data": {
+                    "entity_id": "Light",
+                    "min_brightness": "Minimum brightness allowed (%)",
+                    "gamma": "Gamma"
+                },
+                "data_description": {
+                    "min_brightness": "Choose the value at which your light starts to glow",
+                    "gamma": "Increase this value if there is no visible difference between high brightness levels"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "description": "Adjust the dimming parameters.",
+                "data": {
+                    "entity_id": "Light",
+                    "min_brightness": "Minimum brightness allowed (%)",
+                    "gamma": "Gamma"
+                },
+                "data_description": {
+                    "min_brightness": "Choose the value at which your light starts to glow",
+                    "gamma": "Increase this value if there is no visible difference between high brightness levels"
+                }
+            }
+        }
+    }
+}
