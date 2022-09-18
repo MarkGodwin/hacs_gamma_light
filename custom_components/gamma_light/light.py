@@ -14,7 +14,6 @@ from homeassistant.components.light import (
     ATTR_SUPPORTED_COLOR_MODES,
     ATTR_TRANSITION,
     ATTR_WHITE,
-    ATTR_WHITE_VALUE,
     ATTR_XY_COLOR,
     DOMAIN as LIGHT_DOMAIN,
     ColorMode,
@@ -45,7 +44,6 @@ FORWARDED_ATTRIBUTES = frozenset(
         ATTR_FLASH,
         ATTR_TRANSITION,
         ATTR_WHITE,
-        ATTR_WHITE_VALUE,
         ATTR_XY_COLOR,
     }
 )
