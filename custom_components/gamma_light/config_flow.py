@@ -2,17 +2,17 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import Any
+from typing import Any, cast
 
 import voluptuous as vol
 
 from homeassistant.const import CONF_ENTITY_ID, Platform
 from homeassistant.helpers import entity_registry as er, selector
 from homeassistant.helpers.schema_config_entry_flow import (
+    SchemaCommonFlowHandler,
     SchemaConfigFlowHandler,
     SchemaFlowFormStep,
     SchemaFlowMenuStep,
-    SchemaOptionsFlowHandler,
     wrapped_entity_config_entry_title,
 )
 
@@ -20,7 +20,7 @@ from .const import DOMAIN, GAMMA, MIN_BRIGHTNESS
 
 
 def applicable_light_entity_selector(
-    handler: SchemaConfigFlowHandler | SchemaOptionsFlowHandler,
+    handler: SchemaConfigFlowHandler,
 ) -> vol.Schema:
     """Return an entity selector which allows selection of valid dimmable lights."""
 
@@ -44,15 +44,12 @@ def applicable_light_entity_selector(
     return selector.EntitySelector(entity_selector_config)
 
 
-def generate_config_schema(
-    handler: SchemaConfigFlowHandler | SchemaOptionsFlowHandler,
-    options: dict[str, Any],
-) -> vol.Schema:
+async def generate_config_schema(handler: SchemaCommonFlowHandler) -> vol.Schema:
     """Generate config schema."""
     return vol.Schema(
         {
             vol.Required(CONF_ENTITY_ID): applicable_light_entity_selector(
-                handler,
+                cast(SchemaConfigFlowHandler, handler.parent_handler),
             ),
             vol.Required(MIN_BRIGHTNESS, default=0): selector.NumberSelector(
                 selector.NumberSelectorConfig(
@@ -76,10 +73,7 @@ def generate_config_schema(
     )
 
 
-def generate_options_schema(
-    handler: SchemaConfigFlowHandler | SchemaOptionsFlowHandler,
-    options: dict[str, Any],
-) -> vol.Schema:
+async def generate_options_schema(handler: SchemaCommonFlowHandler) -> vol.Schema:
     """Generate options schema."""
     return vol.Schema(
         {
