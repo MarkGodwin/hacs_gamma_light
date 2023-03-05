@@ -6,7 +6,7 @@ import logging
 import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_ENTITY_ID
+from homeassistant.const import CONF_ENTITY_ID, Platform
 from homeassistant.core import Event, HomeAssistant, callback
 from homeassistant.helpers import device_registry as dr, entity_registry as er
 from homeassistant.helpers.event import async_track_entity_registry_updated_event
@@ -89,7 +89,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     device_id = async_add_to_device(hass, entry, entity_id)
 
-    hass.config_entries.async_setup_platforms(entry, ("light",))
+    await hass.config_entries.async_forward_entry_setups(entry, (Platform.LIGHT,))
     entry.async_on_unload(entry.add_update_listener(config_entry_update_listener))
     return True
 
@@ -101,7 +101,7 @@ async def config_entry_update_listener(hass: HomeAssistant, entry: ConfigEntry) 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
-    return await hass.config_entries.async_unload_platforms(entry, ("light",))
+    return await hass.config_entries.async_unload_platforms(entry, (Platform.LIGHT,))
 
 
 async def async_remove_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
