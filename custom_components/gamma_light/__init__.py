@@ -11,6 +11,7 @@ from homeassistant.core import Event, HomeAssistant, callback
 from homeassistant.helpers import device_registry as dr, entity_registry as er
 from homeassistant.helpers.event import async_track_entity_registry_updated_event
 
+from .const import MAX_BRIGHTNESS
 from .light import GammaAdjustedLight
 
 __all__ = ["GammaAdjustedLight"]
@@ -37,6 +38,22 @@ def async_add_to_device(
     device_registry.async_update_device(device_id, add_config_entry_id=entry.entry_id)
 
     return device_id
+
+
+async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
+    """Migrate old entry."""
+    _LOGGER.debug("Migrating from version %s", config_entry.version)
+
+    if config_entry.version == 1:
+        new = {**config_entry.options}
+        new[MAX_BRIGHTNESS] = 100
+
+        config_entry.version = 2
+        hass.config_entries.async_update_entry(config_entry, options=new)
+
+    _LOGGER.info("Migration to version %s successful", config_entry.version)
+
+    return True
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
