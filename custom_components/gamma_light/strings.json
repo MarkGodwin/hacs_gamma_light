@@ -7,10 +7,12 @@
         "data": {
           "entity_id": "Light",
           "min_brightness": "Minimum brightness allowed (%)",
+          "max_brightness": "Maximum brightness allowed (%)",
           "gamma": "Gamma"
         },
         "data_description": {
           "min_brightness": "Choose the value at which your light starts to glow",
+          "max_brightness": "Choose the maximum brightness you want to use",
           "gamma": "Increase this value if there is no visible difference between high brightness levels"
         }
       }
@@ -23,10 +25,12 @@
         "data": {
           "entity_id": "[%key:component::gamma_light::config::step::user::data::entity_id%]",
           "min_brightness": "[%key:component::gamma_light::config::step::user::data::min_brightness%]",
+          "max_brightness": "[%key:component::gamma_light::config::step::user::data::max_brightness%]",
           "gamma": "[%key:component::gamma_light::config::step::user::data::gamma%]"
         },
         "data_description": {
           "min_brightness": "[%key:component::gamma_light::config::step::user::data_description::min_brightness%]",
+          "max_brightness": "[%key:component::gamma_light::config::step::user::data_description::max_brightness%]",
           "gamma": "[%key:component::gamma_light::config::step::user::data_description::gamma%]"
         }
       }
