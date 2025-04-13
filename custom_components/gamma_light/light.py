@@ -1,4 +1,5 @@
 """Gamma and brightness adjustment for light entities."""
+
 from __future__ import annotations
 
 from typing import Any
@@ -6,11 +7,11 @@ from typing import Any
 from homeassistant.components.light import (
     ATTR_BRIGHTNESS,
     ATTR_COLOR_MODE,
-    ATTR_COLOR_TEMP,
+    ATTR_COLOR_TEMP_KELVIN,
     ATTR_EFFECT,
     ATTR_FLASH,
-    ATTR_MAX_MIREDS,
-    ATTR_MIN_MIREDS,
+    ATTR_MAX_COLOR_TEMP_KELVIN,
+    ATTR_MIN_COLOR_TEMP_KELVIN,
     ATTR_SUPPORTED_COLOR_MODES,
     ATTR_TRANSITION,
     ATTR_WHITE,
@@ -40,7 +41,7 @@ from .const import GAMMA, MAX_BRIGHTNESS, MIN_BRIGHTNESS
 
 FORWARDED_ATTRIBUTES = frozenset(
     {
-        ATTR_COLOR_TEMP,
+        ATTR_COLOR_TEMP_KELVIN,
         ATTR_EFFECT,
         ATTR_FLASH,
         ATTR_TRANSITION,
@@ -146,29 +147,26 @@ class GammaAdjustedLight(LightEntity):
             or ColorMode.RGBWW in supported_modes
         )
         supports_temperature = ColorMode.COLOR_TEMP in supported_modes
+        if supports_temperature:
+            self._attr_min_color_temp_kelvin = state.attributes.get(
+                ATTR_MIN_COLOR_TEMP_KELVIN, self._attr_min_color_temp_kelvin
+            )
+            self._attr_max_color_temp_kelvin = state.attributes.get(
+                ATTR_MAX_COLOR_TEMP_KELVIN, self._attr_max_color_temp_kelvin
+            )
+
         if supports_color:
+            # Use XY mode, regardless of the underlying colour mode the light uses. HA will convert
             self._attr_color_mode = ColorMode.XY
             if supports_temperature:
                 self._attr_supported_color_modes = {ColorMode.XY, ColorMode.COLOR_TEMP}
                 if color_mode == ColorMode.COLOR_TEMP:
                     self._attr_color_mode = ColorMode.COLOR_TEMP
-                    self._attr_min_mireds = state.attributes.get(
-                        ATTR_MIN_MIREDS, self._attr_min_mireds
-                    )
-                    self._attr_max_mireds = state.attributes.get(
-                        ATTR_MAX_MIREDS, self._attr_max_mireds
-                    )
             else:
                 self._attr_supported_color_modes = {ColorMode.XY}
         elif supports_temperature:
             self._attr_supported_color_modes = {ColorMode.COLOR_TEMP}
             self._attr_color_mode = ColorMode.COLOR_TEMP
-            self._attr_min_mireds = state.attributes.get(
-                ATTR_MIN_MIREDS, self._attr_min_mireds
-            )
-            self._attr_max_mireds = state.attributes.get(
-                ATTR_MAX_MIREDS, self._attr_max_mireds
-            )
         elif ColorMode.BRIGHTNESS in supported_modes:
             self._attr_color_mode = ColorMode.BRIGHTNESS
             self._attr_supported_color_modes = {ColorMode.BRIGHTNESS}
@@ -191,7 +189,7 @@ class GammaAdjustedLight(LightEntity):
                 self._attr_xy_color = state.attributes[ATTR_XY_COLOR]
 
             if self._attr_color_mode == ColorMode.COLOR_TEMP:
-                self._attr_color_temp = state.attributes[ATTR_COLOR_TEMP]
+                self._attr_color_temp_kelvin = state.attributes[ATTR_COLOR_TEMP_KELVIN]
 
         self._attr_available = True
 
